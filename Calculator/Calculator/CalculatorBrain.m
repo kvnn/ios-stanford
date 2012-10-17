@@ -1,10 +1,6 @@
 //
 //  CalculatorBrain.m
 //  Calculator
-//
-//  Created by icrossing on 9/25/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
-//
 
 #import "CalculatorBrain.h"
 
