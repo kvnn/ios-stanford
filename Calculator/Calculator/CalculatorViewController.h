@@ -9,5 +9,6 @@
 
 @property (weak, nonatomic) IBOutlet UILabel *display;
 @property (weak, nonatomic) IBOutlet UILabel *allDisplay;
+@property (weak, nonatomic) IBOutlet UILabel *variablesDisplay;
 
 @end

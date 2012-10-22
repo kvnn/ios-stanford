@@ -14,6 +14,7 @@
 
 @synthesize programStack = _programStack;
 
+
 - (NSMutableArray *)programStack {
     if (!_programStack) {
         _programStack = [[NSMutableArray alloc] init];
@@ -21,29 +22,46 @@
     return _programStack;
 } 
 
-- (void)pushOperand:(double)operand {
-    NSNumber *operandObject = [NSNumber numberWithDouble:operand];
-    [self.programStack addObject:operandObject];
-}
-
-- (void)clear {
-    [self.programStack removeAllObjects];
-}
-
-- (double)performOperation:(NSString *)operation {
-    
-    [self.programStack addObject:operation];
-    return [CalculatorBrain runProgram:self.program];
-    
-}
 
 - (id)program {
     return [self.programStack copy];
 }
 
-+ (NSString *)descriptionOfProgram:(id)program {
-    return @"Implement thi sin Assignment 2";
+- (void)pushVariable:(NSString *) varKey {
+    [self.programStack addObject: varKey];
 }
+
+- (void)pushOperand:(double)operand {
+    NSNumber *operandObject = [NSNumber numberWithDouble:operand];
+    [self.programStack addObject:operandObject];
+}
+
+
+- (void)clear {
+    [self.programStack removeAllObjects];
+}
+
+
+- (double)performOperation:(NSString *)operation {
+    
+    [self.programStack addObject:operation];
+    return [CalculatorBrain runProgram :[self program] :nil];
+    
+}
+
+
++ (NSString *)descriptionOfProgram:(id)program {
+    NSEnumerator *enumerator = [program objectEnumerator];
+    NSString* description;
+    id obj;
+    
+    while (obj = [enumerator nextObject]) {
+        description = [description stringByAppendingString: (NSString *) obj];
+    }
+    
+    return description;
+}
+
 
 + (double)popOperandOffStack:(NSMutableArray *)stack {
     double result = 0;
@@ -79,22 +97,66 @@
         } else if ([@"sqrt" isEqualToString:operation]) {
             NSLog(@"COS PRESSED");
             result = sqrt([self popOperandOffStack:stack]);
-        } else if ([@"C" isEqualToString:operation]) {
-            NSLog(@"Show self:%@", self);
-            // TODO Why is this giving me an error?
-            // [[self class] clear];
+        } else {
+            // test if a variable has been pushed
         }
     }
     
     return result;
 }
 
-+ (double)runProgram:(id)program {
+
++ (double)runProgram:(id)program :(NSDictionary *) usingVariableValues 
+{
+
     NSMutableArray *stack;
+    
     if ([program isKindOfClass:[NSArray class]]) {
+    
         stack = [program mutableCopy];
+        
+        NSLog(@"runProgram");
+
+        // if vars are passed in
+        if ([usingVariableValues isKindOfClass:[NSDictionary class]]) {
+            
+            NSLog(@"vars are passed in: %@", usingVariableValues);
+            
+            id obj;
+            int index = 0;
+            
+            NSEnumerator *enumerator = [program objectEnumerator];
+            
+            // for every obj in programStack
+            while ((obj = [enumerator nextObject])) {
+                
+                id varVal = [usingVariableValues objectForKey:(obj)];
+                
+                // test
+                NSLog(@"usingVariableValues objectForKey:(obj) is %@", varVal);
+                
+                // if the obj is a variable key
+                if (!varVal) {
+                    varVal = 0;
+                    
+                    NSLog(@"varVal is false");
+                }
+                
+                NSLog(@"Replacing object at index %@ of stack with var %@", index, varVal);
+                
+                
+                // replace the variable with value from usingVariableValues OR 0
+                [stack replaceObjectAtIndex:(index) withObject:varVal];
+                
+                index += 1;
+                
+            }
+        }
+        
     }
+    
     return [self popOperandOffStack:stack];
 }
+
 
 @end
