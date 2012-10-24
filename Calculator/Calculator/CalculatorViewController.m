@@ -5,10 +5,14 @@
 #import "CalculatorViewController.h"
 #import "CalculatorBrain.h"
 
+
 @interface CalculatorViewController()
+
 @property (nonatomic) BOOL userIsInTheMiddleOfEnteringANumber;
 @property (nonatomic, strong) NSMutableDictionary *variableValues;
+@property (nonatomic, strong) NSSet *variableKeys;
 @property (nonatomic, strong) CalculatorBrain *brain;
+
 @end
 
 @implementation CalculatorViewController
@@ -19,6 +23,19 @@
 @synthesize userIsInTheMiddleOfEnteringANumber;
 @synthesize variableValues = _variableValues;
 @synthesize brain = _brain;
+@synthesize variableKeys = _variableKeys;
+
+- (CalculatorBrain *)brain {
+    if (!_brain) _brain = [[CalculatorBrain alloc] init];
+    return _brain;
+}
+
+- (NSSet *)variableKeys {
+    if (!_variableKeys) {
+        _variableKeys = [NSSet setWithObjects:@"x", @"y", @"foo", nil];
+    }
+    return _variableKeys;
+}
 
 - (NSMutableDictionary *)variableValues {
     if (!_variableValues) {
@@ -28,29 +45,29 @@
 }
 
 
-- (CalculatorBrain *)brain {
-    if (!_brain) _brain = [[CalculatorBrain alloc] init];
-    return _brain;
-}
-
-
 - (IBAction)enterPressed {
+
     NSString *text = self.display.text;
     
-    NSString *varVal = [[self variableValues] objectForKey:(text)];
-    
-    NSLog(@"%@", text);
-    NSLog(@"%@", [self variableValues]);
-    NSLog(@"%@", [[self variableValues] objectForKey:(text)]);
-    
     // if text is a variable key
-    if (varVal) {
+    if ([self.variableKeys containsObject:(text)]) {
         NSLog(@"text is a variable key");
         [self.brain pushVariable:text];
     } else {
         [self.brain pushOperand:[text doubleValue]];
     }
+    
+    // run the program and get the result    
+    double result = [[self.brain class] runProgram:[self.brain program] usingVariableValues:[self variableValues]];
+    
+    //double result = [[self.brain class] runProgram:program usingVariableValues:[self variableValues]];
+    
+    // update the display with the result
+    self.display.text = @"%@", result;
+    
+    // the user is no longer entering a number
     self.userIsInTheMiddleOfEnteringANumber = NO;
+    
 }
 
 
@@ -95,9 +112,9 @@
     
     if (self.variableValues) {
     
-        [self.variableValues setObject:x forKey:@"x"];
-        [self.variableValues setObject:y forKey:@"y"];
-        [self.variableValues setObject:foo forKey:@"foo"];
+        [[self variableValues] setObject:x forKey:@"x"];
+        [[self variableValues] setObject:y forKey:@"y"];
+        [[self variableValues] setObject:foo forKey:@"foo"];
     
     }
     
@@ -110,24 +127,10 @@
 
 - (IBAction)varPressed:(UIButton *)sender {
     
-    if (self.userIsInTheMiddleOfEnteringANumber) {
-        [self enterPressed];
-    }
-    
-    NSString* text = [sender currentTitle];
-            
-    id varVal = [self.variableValues valueForKey:text];
-    
-    NSLog(@"%@", varVal);
-    
-    if (varVal) {
-        self.display.text = text;
-    }
+    self.display.text = sender.currentTitle;
     
     [self enterPressed];
 
-    //text = [self.display.text stringByAppendingString:@" "];
-    //self.allDisplay.text = [self.allDisplay.text stringByAppendingString:text];
     [self updateAllDisplay];
 }
 
@@ -180,8 +183,9 @@
     }
     
     NSString *operation = [sender currentTitle];
-    double result = [self.brain performOperation:operation];
-    self.display.text = [NSString stringWithFormat:@"%g", result];
+    [self.brain pushOperation:operation];
+    
+    [self enterPressed];
     
     [self updateAllDisplay];
     

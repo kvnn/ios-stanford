@@ -28,6 +28,7 @@
 }
 
 - (void)pushVariable:(NSString *) varKey {
+    NSLog(@"varKey is %@", varKey);
     [self.programStack addObject: varKey];
 }
 
@@ -42,10 +43,9 @@
 }
 
 
-- (double)performOperation:(NSString *)operation {
+- (void)pushOperation:(NSString *)operation {
     
     [self.programStack addObject:operation];
-    return [CalculatorBrain runProgram :[self program] :nil];
     
 }
 
@@ -106,8 +106,10 @@
 }
 
 
-+ (double)runProgram:(id)program :(NSDictionary *) usingVariableValues 
++ (double)runProgram:(id)program usingVariableValues:(NSDictionary *) variableValues 
 {
+    
+    NSLog(@"variableValues is %@", variableValues);
 
     NSMutableArray *stack;
     
@@ -118,9 +120,9 @@
         NSLog(@"runProgram");
 
         // if vars are passed in
-        if ([usingVariableValues isKindOfClass:[NSDictionary class]]) {
+        if ([variableValues isKindOfClass:[NSDictionary class]]) {
             
-            NSLog(@"vars are passed in: %@", usingVariableValues);
+            NSLog(@"vars are passed in: %@", variableValues);
             
             id obj;
             int index = 0;
@@ -130,7 +132,7 @@
             // for every obj in programStack
             while ((obj = [enumerator nextObject])) {
                 
-                id varVal = [usingVariableValues objectForKey:(obj)];
+                id varVal = [variableValues objectForKey:(obj)];
                 
                 // test
                 NSLog(@"usingVariableValues objectForKey:(obj) is %@", varVal);

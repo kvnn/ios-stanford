@@ -10,17 +10,18 @@
 
 - (void)pushOperand:(double)operand;
 
-- (double)performOperation:(NSString *)operation;
+- (void)pushOperation:(NSString *)operation;
 
 - (void)clear;
 
-@property (readonly) id program;
-
-+ (double)runProgram:(id)program usingVariableValues:(NSDictionary *)variableValues;
++ (double)runProgram:(id)program usingVariableValues:(NSMutableDictionary *)variableValues;
 
 + (NSString *)descriptionOfProgram:(id)program;
 
 + (NSSet *)variablesUsedInProgram:(id)program;
+
+@property (readonly) id program;
+
 
 @end
 
@@ -41,3 +42,7 @@
 // value from the brain's getter: program = [brain program]
 
 // "People can get the program and ask the class to run it"
+
+// runProgram will return the last operand on the stack
+
+// OR if an operation is on top of the stack, it will return the computed result
