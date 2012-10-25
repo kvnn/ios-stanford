@@ -60,10 +60,10 @@
     // run the program and get the result    
     double result = [[self.brain class] runProgram:[self.brain program] usingVariableValues:[self variableValues]];
     
-    //double result = [[self.brain class] runProgram:program usingVariableValues:[self variableValues]];
+    NSLog(@"double result %f", result);
     
     // update the display with the result
-    self.display.text = @"%@", result;
+    //self.display.text = @"%f", [NSNumber numberWithDouble:5];
     
     // the user is no longer entering a number
     self.userIsInTheMiddleOfEnteringANumber = NO;

@@ -70,6 +70,9 @@
     if(topOfStack) [stack removeLastObject];
     
     if ([topOfStack isKindOfClass:[NSNumber class]]) {
+        // TODO: [topOfStack doubleValue makes 0 turn into null]
+        NSLog(@"stack is in here a %@", stack);
+        NSLog(@"topOfStack %f", [topOfStack doubleValue]);
         result = [topOfStack doubleValue];
         
     } else if ([topOfStack isKindOfClass:[NSString class]]) {
@@ -102,6 +105,8 @@
         }
     }
     
+    NSLog(@"popOperandOffStack result is %f", result);
+    
     return result;
 }
 
@@ -131,17 +136,16 @@
             
             // for every obj in programStack
             while ((obj = [enumerator nextObject])) {
-                
-                id varVal = [variableValues objectForKey:(obj)];
-                
-                // test
-                NSLog(@"usingVariableValues objectForKey:(obj) is %@", varVal);
-                
+                NSNumber* varVal;
+                                
                 // if the obj is a variable key
-                if (!varVal) {
-                    varVal = 0;
+                if (![variableValues objectForKey:(obj)]) {
+                    varVal = [NSNumber numberWithInt:(0)];
                     
-                    NSLog(@"varVal is false");
+                    NSLog(@"varVal is 0?, %@", varVal);
+                } else {
+                    varVal = [variableValues objectForKey:(obj)];
+                    NSLog(@"varVal is, %@", varVal);
                 }
                 
                 NSLog(@"Replacing object at index %@ of stack with var %@", index, varVal);
@@ -149,6 +153,8 @@
                 
                 // replace the variable with value from usingVariableValues OR 0
                 [stack replaceObjectAtIndex:(index) withObject:varVal];
+                
+                NSLog(@"stack is now %@", stack);
                 
                 index += 1;
                 
