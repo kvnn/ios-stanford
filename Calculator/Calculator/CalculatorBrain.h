@@ -28,6 +28,10 @@
 
 // Assignment #2
 
+
+// CURRENT PROBLEM: When you press a variable, it displays the variable's value rather than the variable itself.
+
+
 // Add some API to capture the program and add some API
 // to run the program and get a description of it
 

@@ -25,6 +25,7 @@
 @synthesize brain = _brain;
 @synthesize variableKeys = _variableKeys;
 
+
 - (CalculatorBrain *)brain {
     if (!_brain) _brain = [[CalculatorBrain alloc] init];
     return _brain;
@@ -48,22 +49,24 @@
 - (IBAction)enterPressed {
 
     NSString *text = self.display.text;
-    
+
     // if text is a variable key
-    if ([self.variableKeys containsObject:(text)]) {
-        NSLog(@"text is a variable key");
+    if ([self.variableKeys containsObject: text]) {
+        NSLog(@"variable pressed");
         [self.brain pushVariable:text];
+
     } else {
         [self.brain pushOperand:[text doubleValue]];
+    
     }
     
     // run the program and get the result    
     double result = [[self.brain class] runProgram:[self.brain program] usingVariableValues:[self variableValues]];
     
-    NSLog(@"double result %f", result);
-    
     // update the display with the result
-    //self.display.text = @"%f", [NSNumber numberWithDouble:5];
+    NSLog(@"result is %f", result);
+    
+    self.display.text = [NSString stringWithFormat:@"%@", [NSNumber numberWithDouble:result]];
     
     // the user is no longer entering a number
     self.userIsInTheMiddleOfEnteringANumber = NO;
@@ -131,7 +134,6 @@
     
     [self enterPressed];
 
-    [self updateAllDisplay];
 }
 
 
@@ -182,12 +184,17 @@
         [self enterPressed];
     }
     
-    NSString *operation = [sender currentTitle];
-    [self.brain pushOperation:operation];
+    [self.brain pushOperation: [sender currentTitle]];
     
-    [self enterPressed];
+    // run the program and get the result    
+    double result = [[self.brain class] runProgram:[self.brain program] usingVariableValues:[self variableValues]];
     
-    [self updateAllDisplay];
+    // update the display with the result
+    NSLog(@"result is %f", result);
+    
+    self.display.text = [NSString stringWithFormat:@"%@", [NSNumber numberWithDouble:result]];
+
+    //[self updateAllDisplay];
     
     //NSString *text = [operation stringByAppendingString:@" "];
     //self.allDisplay.text = [self.allDisplay.text stringByAppendingString: text];
