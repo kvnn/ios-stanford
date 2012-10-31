@@ -10,7 +10,6 @@
 
 @property (nonatomic) BOOL userIsInTheMiddleOfEnteringANumber;
 @property (nonatomic, strong) NSMutableDictionary *variableValues;
-@property (nonatomic, strong) NSSet *variableKeys;
 @property (nonatomic, strong) CalculatorBrain *brain;
 
 @end
@@ -23,19 +22,11 @@
 @synthesize userIsInTheMiddleOfEnteringANumber;
 @synthesize variableValues = _variableValues;
 @synthesize brain = _brain;
-@synthesize variableKeys = _variableKeys;
 
 
 - (CalculatorBrain *)brain {
     if (!_brain) _brain = [[CalculatorBrain alloc] init];
     return _brain;
-}
-
-- (NSSet *)variableKeys {
-    if (!_variableKeys) {
-        _variableKeys = [NSSet setWithObjects:@"x", @"y", @"foo", nil];
-    }
-    return _variableKeys;
 }
 
 - (NSMutableDictionary *)variableValues {
@@ -49,9 +40,13 @@
 - (IBAction)enterPressed {
 
     NSString *text = self.display.text;
+    
+    NSArray *variableKeys = [[self variableValues] allKeys];
+    
+    NSLog(@"variableValues is %@", [self variableValues]);
 
     // if text is a variable key
-    if ([self.variableKeys containsObject: text]) {
+    if ([variableKeys containsObject: text]) {
         NSLog(@"variable pressed");
         [self.brain pushVariable:text];
 
@@ -129,10 +124,11 @@
 
 
 - (IBAction)varPressed:(UIButton *)sender {
+    if (self.userIsInTheMiddleOfEnteringANumber) {
+        [self enterPressed];
+    }
     
     self.display.text = sender.currentTitle;
-    
-    [self enterPressed];
 
 }
 

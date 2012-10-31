@@ -67,62 +67,25 @@
 
     NSLog(@"stack is %@", stack);
    
-    double result = 0;
-    NSArray* variableKeys = [variableValues allKeys];
+    double result;
+    NSArray* operationKeys = [NSArray arrayWithObjects:@"*", @"+", @"-", @"/", @"π", @"sqrt", @"SIN", @"COS", nil];
     id topOfStack = [stack lastObject];
     if(topOfStack) [stack removeLastObject];
     
-    NSLog(@"topOfStack is %f", [topOfStack doubleValue]);
+    NSLog(@"topOfStack is %@", topOfStack);
     
     // if topOfStack is a number
     if ([topOfStack isKindOfClass:[NSNumber class]]) {
-        // TODO: [topOfStack doubleValue makes 0 turn into null]
         NSLog(@"topOfSack is an NSNumber");
         result = [topOfStack doubleValue];
-    }
-    // if topOfStack is a var
-    else if ([variableKeys containsObject: topOfStack]) {
-        NSLog(@"topOfStack is a variable");
+    
+    // TODO: THIS WILL ALWAYS GET CALLED FOR A VARIABLE
+    } else if ([operationKeys containsObject: topOfStack]) {
         
-    } else if ([topOfStack isKindOfClass:[NSString class]]) {
-        
-        id obj;
-        int index = 0;
         NSString* operation = topOfStack;
-        NSEnumerator *enumerator = [stack objectEnumerator];
         
         NSLog(@"topOfStack is an operation");
         
-        // for every obj in programStack
-        while ((obj = [enumerator nextObject])) {
-            NSNumber* varVal;
-            
-            // if obj is a variable key
-            if ([variableKeys containsObject:obj]) {
-                
-                // if it does not have a value
-                if (![variableValues objectForKey: obj]) {
-                    
-                    varVal = [NSNumber numberWithInt:(0)];
-                    NSLog(@"varVal is 0?, %@", varVal);
-                    
-                } else {
-                    
-                    varVal = [variableValues objectForKey:(obj)];
-                    NSLog(@"varVal is, %@", varVal);
-                    
-                }
-                
-                // replace the variable with value from usingVariableValues OR 0
-                [stack replaceObjectAtIndex:(index) withObject:varVal];
-                
-                NSLog(@"Replacing object at index %d of stack with var %@", index, varVal);
-            }
-            
-            
-            index += 1;
-            
-        }
         
         if ([operation isEqualToString:@"+"]) {
             result = [self popOperandOffStack:stack withVariableValues: variableValues] + [self popOperandOffStack:stack withVariableValues: variableValues];
@@ -149,6 +112,26 @@
             // test if a variable has been pushed
         }
     }
+    
+    // if topOfStack is a var or unkown
+    else if (topOfStack) {
+        NSLog(@"topOfStack is a variable or unknown");
+        
+        // if var has a value
+        if ([variableValues objectForKey: topOfStack]) {
+            
+            // return its value
+            result = [[variableValues objectForKey: topOfStack] doubleValue];
+            
+        } else {
+            
+            // replace it with 0
+            result = 0;
+            
+            NSLog(@"var has no value, rsult is %f", result);
+        }
+
+    }    
     
     NSLog(@"popOperandOffStack result is %f", result);
     
