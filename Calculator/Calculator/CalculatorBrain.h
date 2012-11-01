@@ -29,7 +29,8 @@
 // Assignment #2
 
 
-// CURRENT PROBLEM: When you press a variable, it displays the variable's value rather than the variable itself.
+// CURRENT PROBLEM: Test 1 ; 2 ; Enter ; y + ==> 4
+// REASON: Because you have to hit 'Enter' when a user clicks a variable
 
 
 // Add some API to capture the program and add some API
