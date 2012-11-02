@@ -6,8 +6,9 @@
 
 // a class
 @interface CalculatorBrain()
-    // an instance variable
-    @property (nonatomic, strong) NSMutableArray *programStack;
+
+// an instance variable
+@property (nonatomic, strong) NSMutableArray *programStack;
 @end
 
 @implementation CalculatorBrain
@@ -15,6 +16,7 @@
 @synthesize programStack = _programStack;
 
 
+// a private getter method used to init our programStack array on demand
 - (NSMutableArray *)programStack {
     if (!_programStack) {
         _programStack = [[NSMutableArray alloc] init];
@@ -22,21 +24,21 @@
     return _programStack;
 }
 
-
+// a public method to get an instance's current program array
 - (id)program {
     return [self.programStack copy];
 }
 
+// a public method to push a variable into the stack
 - (void)pushVariable:(NSString *) varKey {
-    
     [self.programStack addObject: varKey];
 }
 
+// a public method to push a number into the stack
 - (void)pushOperand:(double)operand {
     NSNumber *operandObject = [NSNumber numberWithDouble:operand];
     [self.programStack addObject:operandObject];
 }
-
 
 - (void)clear {
     [self.programStack removeAllObjects];
@@ -44,19 +46,32 @@
 
 
 - (void)pushOperation:(NSString *)operation {
-    
     [self.programStack addObject:operation];
-    
 }
 
 
 + (NSString *)descriptionOfProgram:(id)program {
-    NSEnumerator *enumerator = [program objectEnumerator];
-    NSString* description;
     id obj;
+    NSString* description;
+    description = @"";
+    NSEnumerator *enumerator = [program objectEnumerator];
     
+    NSLog(@"description program is %@", program);
     while (obj = [enumerator nextObject]) {
-        description = [description stringByAppendingString: (NSString *) obj];
+        if ([obj isKindOfClass:[NSNumber class]]) {
+            obj = [obj stringValue];
+        }
+        
+        description = [description stringByAppendingString: (NSString*) obj];
+        
+        if ([obj isKindOfClass:[NSString class]]) {
+            NSLog(@"description is an NSString");
+        } else {
+            NSLog(@"description is NOT an NSString");
+        }
+        
+        description = [description stringByAppendingString: @" "];
+        NSLog(@"while description is %@", description);
     }
     
     return description;

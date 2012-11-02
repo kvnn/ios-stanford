@@ -29,8 +29,7 @@
 // Assignment #2
 
 
-// CURRENT PROBLEM: Test 1 ; 2 ; Enter ; y + ==> 4
-// REASON: Because you have to hit 'Enter' when a user clicks a variable
+// CURRENT PROBLEM: I'm not sure how this calculator is supposed to work
 
 
 // Add some API to capture the program and add some API

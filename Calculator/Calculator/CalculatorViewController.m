@@ -63,6 +63,8 @@
     
     self.display.text = [NSString stringWithFormat:@"%@", [NSNumber numberWithDouble:result]];
     
+    [self updateAllDisplay];
+    
     // the user is no longer entering a number
     self.userIsInTheMiddleOfEnteringANumber = NO;
     
@@ -71,10 +73,11 @@
 
 - (void)updateAllDisplay {
     id program = [self.brain program];
-    //NSString* description = [self.brain descriptionOfProgram:program];
+    NSString* description = [[self.brain class]descriptionOfProgram:program];
     
     NSLog(@"program is %@", program);
-    //NSLog(@"description is %@", description);
+    NSLog(@"description is %@", description);
+    self.allDisplay.text = description;
 }
 
 
@@ -190,7 +193,7 @@
     
     self.display.text = [NSString stringWithFormat:@"%@", [NSNumber numberWithDouble:result]];
 
-    //[self updateAllDisplay];
+    [self updateAllDisplay];
     
     //NSString *text = [operation stringByAppendingString:@" "];
     //self.allDisplay.text = [self.allDisplay.text stringByAppendingString: text];
