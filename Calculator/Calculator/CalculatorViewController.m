@@ -194,9 +194,6 @@
     self.display.text = [NSString stringWithFormat:@"%@", [NSNumber numberWithDouble:result]];
 
     [self updateAllDisplay];
-    
-    //NSString *text = [operation stringByAppendingString:@" "];
-    //self.allDisplay.text = [self.allDisplay.text stringByAppendingString: text];
 
 }
 
