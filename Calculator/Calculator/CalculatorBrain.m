@@ -35,9 +35,8 @@
 }
 
 // a public method to push a number into the stack
-- (void)pushOperand:(double)operand {
-    NSNumber *operandObject = [NSNumber numberWithDouble:operand];
-    [self.programStack addObject:operandObject];
+- (void)pushOperand:(double)operand { 
+    [self.programStack addObject:[NSNumber numberWithDouble:operand]];
 }
 
 - (void)clear {
