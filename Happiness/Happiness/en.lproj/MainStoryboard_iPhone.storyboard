@@ -25,7 +25,7 @@
                     </view>
                     <connections>
                         <outlet property="faceView" destination="POm-ER-djv" id="FCv-3a-GMG"/>
-                        <segue destination="SKa-XT-DZd" kind="push" id="2yN-vb-rLG"/>
+                        <segue destination="SKa-XT-DZd" kind="push" identifier="ShowOther" id="2yN-vb-rLG"/>
                     </connections>
                 </viewController>
             </objects>
